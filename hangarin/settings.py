@@ -110,3 +110,6 @@ SOCIALACCOUNT_PROVIDERS = {
         "SCOPE": ["user:email"],
     },
 }
+
+if not DEBUG:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
