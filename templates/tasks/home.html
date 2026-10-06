@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+{% for m in messages %}<div class="msg">{{ m }}</div>{% endfor %}
+
+<div class="topbar">
+  <h2 style="margin:0">Your tasks</h2>
+  <a class="btn btn-primary" href="{% url 'task_create' %}">+ New task</a>
+</div>
+
+<form method="get" class="card filters">
+  <input type="search" name="q" value="{{ q }}" placeholder="Search title or description...">
+  <select name="status">
+    <option value="">All statuses</option>
+    {% for value, label in status_choices %}
+    <option value="{{ value }}" {% if status == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <select name="priority">
+    <option value="">All priorities</option>
+    {% for p in priorities %}
+    <option value="{{ p.id }}" {% if priority == p.id|stringformat:"s" %}selected{% endif %}>{{ p.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="category">
+    <option value="">All categories</option>
+    {% for c in categories %}
+    <option value="{{ c.id }}" {% if category == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn-primary">Filter</button>
+  {% if filtered %}<a class="btn" href="{% url 'home' %}">Clear</a>{% endif %}
+</form>
+
+{% for task in tasks %}
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+    <h3 style="margin:0 0 6px">{{ task.title }}</h3>
+    <form method="post" action="{% url 'task_delete' task.pk %}" style="margin:0"
+          onsubmit="return confirm('Delete this task and its subtasks and notes?');">
+      {% csrf_token %}
+      <button type="submit" style="color:#b91c1c;border-color:#fecaca;padding:4px 10px;font-size:.85rem">Delete</button>
+    </form>
+  </div>
+  <span class="badge {{ task.status|cut:' ' }}">{{ task.status }}</span>
+  {% if task.priority %}<span class="badge">{{ task.priority }}</span>{% endif %}
+  {% if task.category %}<span class="badge">{{ task.category }}</span>{% endif %}
+  {% if task.deadline %}<span class="muted">Due {{ task.deadline|date:"M d, Y H:i" }}</span>{% endif %}
+  <p>{{ task.description }}</p>
+  {% if task.subtasks.all %}
+  <strong>Subtasks</strong>
+  <ul>{% for s in task.subtasks.all %}<li>{{ s.title }} <span class="muted">({{ s.status }})</span></li>{% endfor %}</ul>
+  {% endif %}
+  {% if task.notes.all %}
+  <strong>Notes</strong>
+  <ul>{% for n in task.notes.all %}<li class="muted">{{ n.content }}</li>{% endfor %}</ul>
+  {% endif %}
+</div>
+{% empty %}
+<div class="card muted">
+  {% if filtered %}No tasks match your search or filters.{% else %}No tasks yet. Click <strong>+ New task</strong> to add one.{% endif %}
+</div>
+{% endfor %}
+{% endblock %}

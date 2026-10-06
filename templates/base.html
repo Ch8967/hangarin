@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Hangarin{% endblock %}</title>
+  <style>
+    :root { --bg:#f5f7fb; --card:#fff; --ink:#1f2937; --muted:#6b7280; --accent:#2563eb; --line:#e5e7eb; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+    header { background:var(--card); border-bottom:1px solid var(--line); padding:14px 24px; display:flex; justify-content:space-between; align-items:center; }
+    header h1 { margin:0; font-size:1.2rem; color:var(--accent); }
+    main { max-width:900px; margin:24px auto; padding:0 16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; margin-bottom:14px; }
+    .badge { display:inline-block; font-size:.75rem; padding:2px 10px; border-radius:999px; background:#eef2ff; color:var(--accent); margin-right:6px; }
+    .badge.Completed { background:#dcfce7; color:#166534; }
+    .badge.Pending { background:#fef3c7; color:#92400e; }
+    .muted { color:var(--muted); font-size:.9rem; }
+    button, .btn { cursor:pointer; border:1px solid var(--line); background:var(--card); border-radius:8px; padding:8px 14px; font-size:.95rem; color:var(--ink); text-decoration:none; }
+    ul { padding-left:20px; margin:6px 0; }
+
+    input[type=text], input[type=search], input[type=datetime-local], select, textarea { width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; font:inherit; background:var(--card); color:var(--ink); }
+    .btn-primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .filters { display:grid; grid-template-columns: 2fr 1fr 1fr 1fr auto auto; gap:8px; align-items:center; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .msg { background:#dcfce7; color:#166534; border-radius:8px; padding:10px 14px; margin-bottom:12px; }
+    .errorlist { color:#b91c1c; list-style:none; padding:0; margin:4px 0; font-size:.85rem; }
+    .field { margin-bottom:14px; }
+    .field label { display:block; font-weight:600; margin-bottom:4px; }
+    @media (max-width:700px) { .filters { grid-template-columns:1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Taskade</h1>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'logout' %}" style="margin:0">
+      {% csrf_token %}
+      <span class="muted">{{ user.get_full_name|default:user.username }}</span>
+      <button type="submit">Log out</button>
+    </form>
+    {% endif %}
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+</body>
+</html>
