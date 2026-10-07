@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.github",
     "tasks",
+    "pwa",
 ]
 
 MIDDLEWARE = [
@@ -113,3 +114,26 @@ SOCIALACCOUNT_PROVIDERS = {
 
 if not DEBUG:
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
+
+
+PWA_APP_NAME = "Taskade"
+PWA_APP_DESCRIPTION = "A Progressive Web App version of Taskade"
+PWA_APP_THEME_COLOR = "#2563eb"
+PWA_APP_BACKGROUND_COLOR = "#FFFFFF"
+PWA_APP_DISPLAY = "standalone"
+PWA_APP_SCOPE = "/"
+PWA_APP_ORIENTATION = "portrait"
+PWA_APP_START_URL = "/"
+PWA_APP_STATUS_BAR_COLOR = "default"
+PWA_APP_ICONS = [
+    {"src": "/static/img/icon-192.png", "sizes": "192x192"},
+    {"src": "/static/img/icon-512.png", "sizes": "512x512"},
+]
+PWA_APP_ICONS_APPLE = [
+    {"src": "/static/img/icon-192.png", "sizes": "192x192"},
+    {"src": "/static/img/icon-512.png", "sizes": "512x512"},
+]
+PWA_APP_DIR = "ltr"
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, "static", "js", "serviceworker.js")
